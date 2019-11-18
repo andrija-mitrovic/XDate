@@ -12,20 +12,17 @@
       <li class="nav-item">
         <a class="nav-link">Messages</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" (click)="logout()">Logged out</a>
-      </li>
     </ul>
 
-    <div *ngIf="loggedIn()" class="dropdown text-light">
-        <a class="dropdown-toggle">
-            Welcome User
+    <div *ngIf="loggedIn()" class="dropdown text-light" dropdown>
+        <a class="dropdown-toggle" dropdownToggle>
+            Welcome {{auth.decodedToken?.unique_name | titlecase}}
         </a>
       
-        <div class="dropdown-menu">
-          <a class="dropdown-item" href="#"><i class="fa fa-user"></i> Edit Profile</a>
+        <div class="dropdown-menu" *dropdownMenu>
+          <a class="dropdown-item"><i class="fa fa-user"></i> Edit Profile</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#"><i class="fa fa-sign-out"></i> Logout</a>
+          <a class="dropdown-item" (click)="logout()"><i class="fa fa-sign-out"></i> Logout</a>
         </div>
       </div>
   </div>
@@ -54,7 +51,7 @@
         placeholder="Password"
         aria-label="Search"
       />
-      <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">
+      <button [disabled]="!loginForm.valid" class="btn btn-primary my-2 my-sm-0" type="submit">
         Sign in
       </button>
     </form>
