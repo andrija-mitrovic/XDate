@@ -23,6 +23,7 @@ namespace XDate.BackEnd.Helpers
                 .ForMember(dest=>dest.Age, opt => 
                     opt.MapFrom(src=>src.DateOfBirth.CalculateAge()));
             CreateMap<Photo,PhotoForDetailedDto>();
+            CreateMap<UserForUpdateDto,User>();
         }
     }
 }
