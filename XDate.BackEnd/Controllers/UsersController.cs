@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using XDate.BackEnd.Data;
 using XDate.BackEnd.Dtos;
+using XDate.BackEnd.Helpers;
 using XDate.BackEnd.Models;
 
 namespace XDate.BackEnd.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
