@@ -13,7 +13,7 @@ import { NavComponent } from './nav/nav.component';
 import { RegisterComponent } from './home/register/register.component';
 import { AuthService } from './_services/auth.service';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
-import { BsDropdownModule, TabsModule, BsDatepickerModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule } from 'ngx-bootstrap';
 import { AlertifyService } from './_services/alertify.service';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './routes';
@@ -63,6 +63,8 @@ export function tokenGetter() {
       HttpClientModule,
       RouterModule.forRoot(appRoutes),
       FormsModule,
+      ButtonsModule.forRoot(),
+      PaginationModule.forRoot(),
       ReactiveFormsModule,
       BsDropdownModule.forRoot(),
       TabsModule.forRoot(),
