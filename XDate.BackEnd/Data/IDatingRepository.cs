@@ -14,5 +14,6 @@ namespace XDate.BackEnd.Data
          Task<bool> SaveAll();
          Task<Photo> GetPhoto(int id);
          Task<Photo> GetCurrentPhoto(int userId);
+         Task<Like> GetLike(int userId,int recipientId);
     }
 }
