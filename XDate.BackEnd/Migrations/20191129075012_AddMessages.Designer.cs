@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XDate.BackEnd.Data;
 
 namespace XDate.BackEnd.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20191129075012_AddMessages")]
+    partial class AddMessages
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -46,11 +48,7 @@ namespace XDate.BackEnd.Migrations
 
                     b.Property<DateTime>("MessageSent");
 
-                    b.Property<bool>("RecipientDeleted");
-
                     b.Property<int>("RecipientId");
-
-                    b.Property<bool>("SenderDeleted");
 
                     b.Property<int>("SenderId");
 
