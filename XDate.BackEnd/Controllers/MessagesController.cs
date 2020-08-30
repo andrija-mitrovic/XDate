@@ -13,7 +13,6 @@ using XDate.BackEnd.Models;
 namespace XDate.BackEnd.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
-    [Authorize]
     [Route("api/users/{userId}/[controller]")]
     [ApiController]
     public class MessagesController : ControllerBase

@@ -13,7 +13,7 @@ import { NavComponent } from './nav/nav.component';
 import { RegisterComponent } from './home/register/register.component';
 import { AuthService } from './_services/auth.service';
 import { ErrorInterceptorProvider } from './_services/error.interceptor';
-import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule, ModalModule } from 'ngx-bootstrap';
 import { AlertifyService } from './_services/alertify.service';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './routes';
@@ -34,6 +34,12 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
 import { ListsResolver } from './_resolvers/lists.resolver';
 import { MessagesResolver } from './_resolvers/messages.resolver';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './_directives/hasRole.directive';
+import { UserManagmentComponent } from './admin/user-managment/user-managment.component';
+import { PhotoManagmentComponent } from './admin/photo-managment/photo-managment.component';
+import { AdminService } from './_services/admin.service';
+import { RolesModelComponent } from './admin/roles-model/roles-model.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -60,7 +66,12 @@ export function tokenGetter() {
       MemberEditComponent,
       PhotoEditorComponent,
       TimeAgoPipe,
-      MemberMessagesComponent
+      MemberMessagesComponent,
+      AdminPanelComponent,
+      HasRoleDirective,
+      UserManagmentComponent,
+      PhotoManagmentComponent,
+      RolesModelComponent
    ],
    imports: [
       BrowserModule,
@@ -76,6 +87,7 @@ export function tokenGetter() {
       BsDatepickerModule.forRoot(),
       NgxGalleryModule,
       FileUploadModule,
+      ModalModule.forRoot(),
       JwtModule.forRoot({
          config: {
            tokenGetter: tokenGetter,
@@ -96,7 +108,11 @@ export function tokenGetter() {
       PreventUnsavedChanges,
       ListsResolver,
       MessagesResolver,
+      AdminService,
       { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
+   ],
+   entryComponents: [
+      RolesModelComponent
    ],
    bootstrap: [
       AppComponent

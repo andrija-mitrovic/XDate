@@ -7,12 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +26,7 @@ using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using XDate.BackEnd.Data;
 using XDate.BackEnd.Helpers;
+using XDate.BackEnd.Models;
 
 namespace XDate.BackEnd
 {
@@ -38,6 +42,19 @@ namespace XDate.BackEnd
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IdentityBuilder builder = services.AddIdentityCore<User>(options => {
+                options.Password.RequireDigit=false;
+                options.Password.RequiredLength=4;
+                options.Password.RequireNonAlphanumeric=false;
+                options.Password.RequireUppercase=false;
+            });
+
+            builder=new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
+            builder.AddEntityFrameworkStores<DataContext>();
+            builder.AddRoleValidator<RoleValidator<Role>>();
+            builder.AddRoleManager<RoleManager<Role>>();
+            builder.AddSignInManager<SignInManager<User>>();
+
             services.AddDbContext<DataContext>(options =>
             {
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -50,7 +67,14 @@ namespace XDate.BackEnd
                 }
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+            services.AddMvc(options => {
+                var policy=new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+
+                options.Filters.Add(new AuthorizeFilter(policy));
+
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
@@ -60,7 +84,6 @@ namespace XDate.BackEnd
             services.AddScoped<Seed>();
             services.AddAutoMapper(typeof(DatingRepository).Assembly);
             services.AddScoped<IDatingRepository, DatingRepository>();
-            services.AddScoped<IAuthRepository, AuthRepository>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddScoped<LogUserActivity>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -75,6 +98,12 @@ namespace XDate.BackEnd
                         ValidateAudience = false
                     };
                 });
+
+            services.AddAuthorization(options => {
+                options.AddPolicy("RequireAdminRole", policy=>policy.RequireRole("Admin"));
+                options.AddPolicy("ModeratePhotoRole", policy=>policy.RequireRole("Admin", "Moderator"));
+                options.AddPolicy("VipOnly", policy=>policy.RequireRole("VIP"));
+            });
 
             services.AddSwaggerGen(options =>
                 options.SwaggerDoc("v1", new Info { Title = "Conference Planner API", Version = "v1" })
@@ -108,7 +137,7 @@ namespace XDate.BackEnd
                 });
             }
 
-            // seed.SeedUsers();
+            seed.SeedUsers();
 
             app.UseSwagger();
 

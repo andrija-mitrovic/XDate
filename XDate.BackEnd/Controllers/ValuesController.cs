@@ -7,21 +7,21 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace XDate.BackEnd.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
         // GET api/values
         [HttpGet]
+        [Authorize(Roles="Admin")]
         public ActionResult<IEnumerable<string>> Get()
         {
             return new string[] { "value1", "value2" };
         }
 
-        [AllowAnonymous]
         // GET api/values/5
         [HttpGet("{id}")]
+        [Authorize(Roles="Member")]
         public ActionResult<string> Get(int id)
         {
             return "value";
